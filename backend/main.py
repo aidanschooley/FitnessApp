@@ -38,3 +38,8 @@ class DB:
                 self.conn.close()
         except:
             pass
+
+if __name__ == "__main__":
+    db = DB()
+    result = db.query("SELECT database();")
+    print("Current database:", result)
