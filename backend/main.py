@@ -1,43 +1,40 @@
 import mysql.connector
+from mysql.connector import Error
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class DB:
     def __init__(self):
-        self.conn = self.create_connection(
-        # Establishes a connection to the MySQL database.
-        
-            host='127.0.0.1',
-            user='root',
-            password='Jet#42!@40,?00mysql',
-            database='FitnessApp'
-        )
+        try:
+            self.conn = mysql.connector.connect(
+                host=os.getenv("DB_HOST"),
+                port=os.getenv("DB_PORT"),
+                user=os.getenv("DB_USER"),
+                password=os.getenv("DB_PASSWORD"),
+                database=os.getenv("DB_NAME"),
+            )
+            print("Connected to database")
+        except Error as e:
+            print("DB connection error:", e)
 
-        self.db_cursor = self.conn.cursor()
+    def query(self, sql, params=None):
+        """Safe SELECT query"""
+        cursor = self.conn.cursor(dictionary=True)
+        cursor.execute(sql, params)
+        return cursor.fetchall()
 
-    def executeQuery(self, sql, values=None):
-        # Executes a given SQL query with optional values.
-        self.db_cursor.execute(sql, values or ())
-        return self.db_cursor
+    def execute(self, sql, params=None):
+        """Safe INSERT/UPDATE/DELETE"""
+        cursor = self.conn.cursor()
+        cursor.execute(sql, params)
+        self.conn.commit()
+        return cursor.lastrowid
 
-        
-    def create_connection(self, host, user, password, database):
-        # Creates and returns a connection to the MySQL database.
-        return mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
-        )
-    
-    def close_connection(self):
-        # Closes the database connection.
-        if self.conn.is_connected():
-            self.db_cursor.close()
-            self.conn.close()
-        print("Database connection closed.")
-
-if __name__ == "__main__":
-    db = DB()
-    # Example usage
-    result = db.executeQuery("SELECT DATABASE();")
-    print("Connected to database:", result.fetchone())
-
+    def __del__(self):
+        try:
+            if self.conn.is_connected():
+                self.conn.close()
+        except:
+            pass
