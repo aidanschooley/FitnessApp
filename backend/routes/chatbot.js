@@ -1,0 +1,41 @@
+import express from "express";
+import OpenAI from "openai";
+
+const router = express.Router();
+
+const client = new OpenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+});
+
+router.post("/analyze", async (req, res) => {
+  try {
+    const { activityType, userData } = req.body;
+
+    if (!activityType || !userData) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const systemMessage = {
+      role: "system",
+      content:
+        "You are an athletic activity analyst that helps users summarize their daily activities and provides insights on improving their fitness routines. You will be given a small set of data from the user, including activity type, duration, distance, and user's perceived intensity score out of 10. Use this data to generate a concise summary of the user's activity and present some insights or further data you can gather from what was inputted. Then suggest 1 way to enhance their fitness regimen. Use at most 3 sentences in your response."
+    };
+
+    const response = await client.chat.completions.create({
+      model: "gemini-2.5-flash",
+      messages: [
+        systemMessage,
+        { role: "user", content: JSON.stringify(userData) }
+      ]
+    });
+
+    const aiResponse = response.choices[0].message.content;
+    res.json({ response: aiResponse });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+export default router;
