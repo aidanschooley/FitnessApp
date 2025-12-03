@@ -1,60 +1,16 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-
-const options = [
-  {
-    name: 'Enable backdrop (default)',
-    scroll: false,
-    backdrop: true,
-  },
-  {
-    name: 'Disable backdrop',
-    scroll: false,
-    backdrop: false,
-  },
-  {
-    name: 'Enable body scrolling',
-    scroll: true,
-    backdrop: false,
-  },
-  {
-    name: 'Enable both scrolling & backdrop',
-    scroll: true,
-    backdrop: true,
-  },
-];
-function OffCanvasExample({ name, ...props }) {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const toggleShow = () => setShow((s) => !s);
-
-  return (
-    <>
-      <Button variant="primary" onClick={toggleShow} className="me-2">
-        {name}
-      </Button>
-      <Offcanvas show={show} onHide={handleClose} {...props}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          Some text as placeholder. In real life you can have the elements you
-          have chosen. Like, text, images, lists, etc.
-        </Offcanvas.Body>
-      </Offcanvas>
-    </>
-  );
-}
+import e from "express";
 
 function SideMenu() {
   return (
-    <>
-      {options.map((props, idx) => (
-        <OffCanvasExample key={idx} {...props} />
-      ))}
-    </>
+    <div className="bg-light border-right" style={{ width: '250px', minHeight: '100vh' }}>
+      <div className="sidebar-heading p-3">Side Menu</div>
+      <div className="list-group list-group-flush">
+        <a href="#" className="list-group-item list-group-item-action bg-light">Dashboard</a>
+        <a href="#" className="list-group-item list-group-item-action bg-light">Profile</a>
+        <a href="#" className="list-group-item list-group-item-action bg-light">Settings</a>
+        <a href="#" className="list-group-item list-group-item-action bg-light">Logout</a>
+      </div>
+    </div>
   );
 }
 

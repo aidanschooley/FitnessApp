@@ -1,11 +1,20 @@
-import React from 'react'
-import SideMenu from '../Components/SideMenu.jsx'
+// src/pages/Dashboard.jsx
+import SideMenu from "../components/SideMenu.jsx";
+
 function Dashboard() {
-  return <div>
-    <h1>Dashboard Page</h1>
-    <h3>Welcome to the Dashboard!</h3>
-    <SideMenu />
-  </div>
+  return (
+    <div className="d-flex">
+      {/* Sidebar */}
+      <SideMenu />
+
+      {/* Main content */}
+      <div className="flex-grow-1 p-4">
+        <h1>Dashboard Page</h1>
+        <h3>Welcome to the Dashboard!</h3>
+        <p>Your main content goes here.</p>
+      </div>
+    </div>
+  );
 }
 
-export default Dashboard
+export default Dashboard;
