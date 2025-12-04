@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import userRoutes from "./routes/user.js";
 import authRoutes from "./routes/auth.js";
+import chatbotRoute from "./routes/chatbot.js";
 
 dotenv.config();
 
@@ -12,10 +13,13 @@ const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
+// Enable CORS for local development (adjust origin as needed)
+app.use(cors());
 
 // routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/chatbot", chatbotRoute);
 
 // test route
 app.get("/", (req, res) => {
