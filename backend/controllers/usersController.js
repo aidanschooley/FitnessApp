@@ -1,14 +1,15 @@
 import db from "../db/connection.js";
 
 export const createUser = (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!username || !password)
-    return res.status(400).json({ error: "Missing username or password" });
+  if (!username || !email || !password)
+    return res.status(400).json({ error: "Missing username, email or password" });
 
-  const sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+  const sql = "INSERT INTO users (username, email, password, dateCreated) VALUES (?, ?, ?, ?)";
+  const date = new Date().toISOString().slice(0, 19).replace("T", " ");
 
-  db.query(sql, [username, password], (err, result) => {
+  db.query(sql, [username, email, password, date], (err, result) => {
     if (err) return res.status(500).json({ error: err });
 
     res.json({ message: "User created!", userId: result.insertId });
