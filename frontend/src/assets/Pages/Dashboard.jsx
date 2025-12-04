@@ -1,5 +1,5 @@
 // src/pages/Dashboard.jsx
-import SideMenu from "../components/SideMenu.jsx";
+import SideMenu from "../components/sideMenu.jsx";
 
 function Dashboard() {
   return (
