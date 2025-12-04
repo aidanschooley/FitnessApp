@@ -19,7 +19,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "mysql2": "^3.15.3",
-    "node-datetime": "^2.1.2"
+    "openai": "^4.35.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
