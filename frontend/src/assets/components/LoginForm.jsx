@@ -80,6 +80,7 @@ export default function Login() {
                 </div>
                 <button type="submit" className="btn btn-primary">Login</button>
             </form>
+            <a href="/register">Don't have an account? Register here.</a>
         </div>
     );
 }
