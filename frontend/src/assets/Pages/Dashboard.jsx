@@ -3,6 +3,7 @@ import SideMenu from "../components/sideMenu.jsx";
 import Login from "./Login.jsx";
 import DashCard from "../components/Dashcard.jsx";
 import FeedPost from "../components/feedpost.jsx";
+import ActivityAnalyzer from "../components/ActivityAnalyzer.jsx";
 
 function Dashboard() {
    const user = localStorage.getItem('user'); // Retrieve user data from local strorage
@@ -14,13 +15,19 @@ function Dashboard() {
               {/* Sidebar */}
               <SideMenu />
 
+
+function Dashboard() {
+  return (
+    if (!user) {
+
               {/* Main content */}
               <div className="flex-grow-1 p-4">
                 <h1>Dashboard Page</h1>
                 <h3>Welcome to the Dashboard!</h3>
+                <ActivityAnalyzer />
                 <div className="container">
                   <div className="row">
-                    <DashCard
+                   <DashCard
                     content={{title:"Water Intake", content:"Track your daily water consumption here.", defaultValue:"0 oz"}}
                     />
                     <DashCard
