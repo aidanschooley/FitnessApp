@@ -14,12 +14,6 @@ function Dashboard() {
               <div className="d-flex">
               {/* Sidebar */}
               <SideMenu />
-
-
-function Dashboard() {
-  return (
-    if (!user) {
-
               {/* Main content */}
               <div className="flex-grow-1 p-4">
                 <h1>Dashboard Page</h1>
