@@ -23,11 +23,14 @@ function SideMenu() {
           <FaBars size={20} />
         </Button>
       )}
-
+  
       <Offcanvas 
         show={show} 
         onHide={handleClose} 
-        placement="start"   // LEFT SIDE MENU
+        placement="start" 
+        scroll={true}
+        backdrop={false}
+        style={{ width: "250px", height: "75%", border: "2px solid #000000",  borderRadius: 10, marginTop: "60px", marginRight: "20px" }}
       >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Menu</Offcanvas.Title>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Workout from "../Pages/workout";
 
 export default function ActivityAnalyzer() {
   const [activityType, setActivityType] = useState("Running");
@@ -68,8 +69,17 @@ export default function ActivityAnalyzer() {
       {error && <p style={{ color: "red" }}>{error}</p>}
       {response && (
         <div>
-          <h3>AI Summary</h3>
-          <p>{response}</p>
+          <WorkoutSummary
+          aiResponse={response}
+          userData={{ 
+            type: activityType,
+            distance,
+            duration,
+            pace,
+            "perceived intensity": intensity
+          }} />
+          {/* <h3>AI Summary</h3>
+          <p>{response}</p> */}
         </div>
       
       )}

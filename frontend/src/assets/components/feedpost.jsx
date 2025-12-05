@@ -5,7 +5,7 @@ function FeedPost() {
         <div className="card mb-3" style={{maxWidth: "540px"}}>
         <div className="row g-0">
             <div className="col-md-4">
-            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fblank-profile-picture&psig=AOvVaw2GZiZM4b30yyYfonE89QJC&ust=1764949440642000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCOD51aCjpJEDFQAAAAAdAAAAABAE" className="img-fluid rounded-start" alt="..."/>
+            <img src="../images/runningman.png" className="img-fluid rounded-start" alt="running man"/>
             </div>
             <div className="col-md-8">
             <div className="card-body">
