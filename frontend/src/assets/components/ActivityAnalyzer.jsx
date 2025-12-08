@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Workout from "../Pages/workout";
+import WorkoutSummary from "./WorkoutSummary";
 
 export default function ActivityAnalyzer() {
   const [activityType, setActivityType] = useState("Running");
