@@ -29,8 +29,14 @@ function WorkoutSummary({ aiResponse, userData }) {
           <Offcanvas.Title>Workout Summary</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-            <h5>AI Summary</h5>
-            <p>{aiResponse}</p>
+            {aiResponse && aiResponse !== "Activity created successfully!" ? (
+              <>
+                <h5>AI Summary</h5>
+                <p>{aiResponse}</p>
+              </>
+            ) : (
+              <p><em>No AI summary available. Activity created without analysis.</em></p>
+            )}
             <h5>Your Workout Data:</h5>
             <ul>
               {Object.entries(userData).map(([key, value]) => (
