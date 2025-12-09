@@ -4,6 +4,7 @@ import { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Button from "react-bootstrap/Button";
 import { FaBars } from "react-icons/fa"; // hamburger icon
+import SignOut from './signout';
 
 function SideMenu() {
   const [show, setShow] = useState(false);
@@ -42,6 +43,7 @@ function SideMenu() {
             <li><a href="/workout">Workout</a></li>
             <li><a href="/goals">Goals</a></li>
           </ul>
+          <SignOut />
         </Offcanvas.Body>
       </Offcanvas>
     </>

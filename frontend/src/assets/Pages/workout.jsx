@@ -4,7 +4,7 @@ import WorkoutSubmission from "../components/WorkoutSubmission.jsx";
 
 function Workout() {
     const user = localStorage.getItem('user'); // Retrieve user data from local strorage
-    if (!user){
+    if (user){
     return (
         <div>
             <SideMenu />
