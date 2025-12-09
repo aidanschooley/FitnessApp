@@ -12,7 +12,6 @@ export default function Login() {
     const user = localStorage.getItem('user'); // Retrieve user data from local strorage
 
     // If the user is not logged in render the login form
-    // If the user is logged in as a normal user or as an admin, render the NotPage component to help them return to the homepage.
     if (user){
         return <>
             <Dashboard/>
@@ -21,7 +20,6 @@ export default function Login() {
         </>  
     } else{
         return <>
-            <Navigation />
             {/*Sends not signed in guest to login page */}
             <LoginForm />
         </>   
