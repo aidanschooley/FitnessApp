@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # secrets
-backend\.env
+backend/.env

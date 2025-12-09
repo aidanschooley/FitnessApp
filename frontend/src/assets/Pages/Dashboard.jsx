@@ -9,7 +9,7 @@ function Dashboard() {
    const user = localStorage.getItem('user'); // Retrieve user data from local strorage
   
       // If the user is not logged in render the login form
-      if (!user){
+      if (user){
           return <>
               <div className="d-flex">
               {/* Sidebar */}

@@ -11,7 +11,7 @@ export default function Login() {
         e.preventDefault();
 
         // Send login data to the backend
-        fetch('http://localhost:5000/api/login', {
+        fetch('http://localhost:5000/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export default function Login() {
             .then((data) => {
                 //after response, returns to Home page
                 <Navigate to="/" replace />
-                alert(`Welcome, ${data.user.firstName} ${data.user.lastName}!`);
+                alert(`Welcome!!`);
                 //sets token and user to local storage
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
