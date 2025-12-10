@@ -125,15 +125,15 @@ export const filterActivitiesByTypeDate = async (req, res) => {
         return res.status(400).json({ error: "Missing user ID" });
     }
 
-    let query = `SELECT * FROM activity WHERE Users_idUsers = ?`;
+    let query = "SELECT * FROM activity WHERE Users_idUsers = ?";
     const params = [userid];
 
     if (activityType) {
-        query += ` AND activityType = ?`;
+        query += " AND activityType = ?";
         params.push(activityType);
     }
     if (date) {
-        query += ` AND dateCreated >= ?`;
+        query += " AND dateCreated >= ?";
         params.push(date);
     }
 
@@ -145,14 +145,4 @@ export const filterActivitiesByTypeDate = async (req, res) => {
         console.error(error);
         return res.status(500).json({ error: "Failed to filter activities" });
     }
-};
-
-
-export default {
-    uploadActivity,
-    getActivitySummary,
-    getActivityById,
-    updateActivity,
-    deleteActivity,
-    filterActivitiesByTypeDate
 };
