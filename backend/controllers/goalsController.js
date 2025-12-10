@@ -6,15 +6,16 @@ export const createGoal = async (req, res) => {
         duration = null, 
         pace = null, 
         stroke = null, 
-        targetDate 
+        targetDate,
+        activityType = null
     } = req.body;
     if (!userId  || !targetDate) {
         return res.status(400).json({ error: "Missing required fields" });
     }
     try {
         await db.execute(
-            "INSERT INTO goals (distance, duration, pace, dateCreated, dateCompleted, deadlineDate, stroke, Users_idUsers) VALUES (?, ?, ?, NOW(), NULL, ?, ?, ?)",
-            [distance, duration, pace, targetDate, stroke, userId]
+            "INSERT INTO goals (distance, duration, pace, dateCreated, dateCompleted, deadlineDate, stroke, Users_idUsers, activityType) VALUES (?, ?, ?, NOW(), NULL, ?, ?, ?)",
+            [distance, duration, pace, targetDate, stroke, userId, activityType]
         );
         res.status(201).json({ message: "Goal created successfully" });
     } catch (error) {
@@ -58,14 +59,15 @@ export const updateGoal = async (req, res) => {
         pace = null,
         dateCompleted = null, 
         deadlineDate = null, 
-        stroke = null
+        stroke = null,
+        activityType = null
     } = req.body;
     
     try {
-        console.log("Updating goal:", distance, duration, pace, stroke, goalId),
+        // console.log("Updating goal:", distance, duration, pace, stroke, goalId),
         await db.execute(
-            "UPDATE goals SET distance = ?, duration = ?, pace = ?,  dateCompleted = ?, deadlineDate = ?, stroke = ? WHERE idGoals = ?",
-            [distance, duration, pace,dateCompleted, deadlineDate, stroke, goalId]
+            "UPDATE goals SET distance = ?, duration = ?, pace = ?,  dateCompleted = ?, deadlineDate = ?, stroke = ? , activityType = ?, WHERE idGoals = ?",
+            [distance, duration, pace,dateCompleted, deadlineDate, stroke, activityType, goalId]
         );
         res.json({ message: "Goal updated successfully" });
     } catch (error) {
@@ -74,5 +76,23 @@ export const updateGoal = async (req, res) => {
     }
 };
 
-// ,
-//  
+export const checkIfGoalCompleted = async (userId, activityType, distance, duration, pace) => {
+    try {
+        const [rows] = await db.execute(
+            "SELECT * FROM goals WHERE Users_idUsers = ? AND activityType = ? AND dateCompleted IS NULL",
+            [userId, activityType]
+        );
+        let completedGoalIds = [];
+        for (const goal of rows) {
+            if ((distance && goal.distance && distance >= goal.distance) ||
+                (duration && goal.duration && duration <= goal.duration) ||
+                (pace && goal.pace && pace <= goal.pace)) {
+                completedGoalIds.push(goal.idGoals);
+            }
+        }
+        return true;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to check for completed goals");
+    }
+};
