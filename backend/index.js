@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 
 import userRoutes from "./routes/user.js";
 import authRoutes from "./routes/auth.js";
+import activitiesRoutes from "./routes/activities.js";
+import goalsRoutes from "./routes/goals.js";
 // import chatbotRoute from "./routes/chatbot.js";
 
 dotenv.config();
@@ -20,6 +22,8 @@ app.use(cors());
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 // app.use("/api/chatbot", chatbotRoute);
+app.use("/api/activities", activitiesRoutes);
+app.use("/api/goals", goalsRoutes);
 
 // test route
 app.get("/", (req, res) => {
