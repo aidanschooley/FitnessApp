@@ -1,4 +1,6 @@
 import db from "../db/connection.js";
+import { checkIfNewRecord } from "./recordsController.js";
+import { checkIfGoalCompleted } from "./goalsController.js";
 
 export const uploadActivity = async (req, res) => {
     const {
@@ -42,6 +44,38 @@ export const uploadActivity = async (req, res) => {
                 activityType   
             ]
         );
+        const isNewRecord = await checkIfNewRecord(
+            userid,
+            activityType,
+            distance,
+            duration,
+            pace
+        );
+        if (isNewRecord) {
+            await db.execute(
+                `INSERT INTO records
+                (distance, duration, pace, date, stroke, Users_idUsers, activityType)
+                VALUES (?, ?, ?, NOW(), ?, ?, ?)`,
+                [
+                    distance,
+                    duration,
+                    pace,
+                    stroke,
+                    userid,
+                    activityType
+                ]
+            );
+        }
+        const complete = await checkIfGoalCompleted(
+            userid,
+            activityType,
+            distance,
+            duration,
+            pace
+        );
+        if (complete) {
+            console.log("Goal completed for user:", userid);
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Failed to upload activity" });
