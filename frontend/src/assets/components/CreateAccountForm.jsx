@@ -4,20 +4,16 @@ import { Navigate } from 'react-router-dom';
 var id = 0;
 
 export default function CreateAccountForm() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loggedIn, setLoggedin] = useState(false);
 
 
-    function updateFirstName(newFirstName) {
-        setFirstName(newFirstName);
+    function updateUsername(newUsername) {
+        setUsername(newUsername);
     }
 
-    function updateLastName(newLastName) {
-        setLastName(newLastName);
-    }
 
     function updateEmail(newEmail) {
         setEmail(newEmail);
@@ -42,20 +38,16 @@ export default function CreateAccountForm() {
     function handleSubmit(e) {
         e.preventDefault();
         //chesks if the fields are filled
-        if (firstName === '' || lastName === '' || email === '' || password === '') {
+        if (username === '' || email === '' || password === '') {
             alert('Please fill in all fields!');
             return;
         }
-        //created time created and updayed
-        const createdAt = new Date().toLocaleString() + "";
-        const updatedAt = new Date().toLocaleString() + "";
-        const role = "user";
         
         //creates user info
-        const newUser = { id, firstName, lastName, email, password, role, createdAt, updatedAt };
+        const newUser = {username, email, password};
     
         // Send the newUser to the backend
-        fetch('http://localhost:5000/api/users', {
+        fetch('http://localhost:5000/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,12 +56,13 @@ export default function CreateAccountForm() {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.token) {
+            console.log(data);
+                if (data.message === 'User registered successfully') {
                     // Store the token and user information in localStorage
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
     
-                    alert(`Registration successful for ${firstName} ${lastName}`);
+                    alert(`Registration successful! Welcome!`);
                     setLoggedin(true); // Redirect to the homepage
                 } else if (data.message === 'Email address is already registered.') {
                     alert('Email already exists. Go Login');
@@ -95,26 +88,14 @@ export default function CreateAccountForm() {
             {/*First name required */}
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="firstName" className="form-label">First Name</label>
+                    <label htmlFor="username" className="form-label">Username</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="firstName"
-                        placeholder="Enter your first name"
+                        id="username"
+                        placeholder="Enter your username"
                         required
-                        onChange={(e) => updateFirstName(e.target.value)}
-                    />
-                </div>
-                {/*last name required */}
-                <div className="mb-3">
-                    <label htmlFor="lastName" className="form-label">Last Name</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="lastName"
-                        placeholder="Enter your last name"
-                        required
-                        onChange={(e) => updateLastName(e.target.value)}
+                        onChange={(e) => updateUsername(e.target.value)}
                     />
                 </div>
                 {/*Email addres required */}
@@ -145,5 +126,5 @@ export default function CreateAccountForm() {
                 <button type="submit" className="btn btn-primary">Create Account</button>
             </form>
         </div>
-    );
-}
+    ); 
+}  
