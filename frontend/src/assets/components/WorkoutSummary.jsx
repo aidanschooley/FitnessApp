@@ -5,25 +5,41 @@ import { Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function WorkoutSummary({ aiResponse, userData }) {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
-
+  
   const submitWorkout = () => {
-    // ... submit logic
-    // handleClose();
-    alert("Workout submitted!");
-
-    navigate("/", { replace: true });
+    console.log("Submitting workout:", JSON.stringify(userData));
+    
+     fetch('http://localhost:5000/api/activities/upload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+            console.log(data);
+                if (data.message === '"Activity uploaded successfully"') {
+                  alert("Workout submitted!");
+                  navigate("/", { replace: true });
+                } else if (data.message === 'Missing Required Fields') {
+                    alert('Missing Required Fields. Please check your input.');
+                } else {
+                    alert('Failed to upload activity. Please try again.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
   };
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch Bottom Offcanvas
-      </Button>
-
       <Offcanvas style={{ height: '55vh' }} show={show} onHide={handleClose} placement="bottom">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Workout Summary</Offcanvas.Title>
