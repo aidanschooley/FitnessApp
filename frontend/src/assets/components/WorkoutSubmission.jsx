@@ -5,7 +5,7 @@ function WorkoutSubmission() {
     return (
         <div>
             <ActivityAnalyzer />
-            <WorkoutSummary 
+            {/* <WorkoutSummary 
             aiResponse={"this is your ai response"}
             userData={{ 
                 type: "Running",
@@ -14,7 +14,7 @@ function WorkoutSubmission() {
                 pace: "6min/km",
                 "perceived intensity": "7"
             }}
-            />
+            /> */}
         </div>
     );
 }

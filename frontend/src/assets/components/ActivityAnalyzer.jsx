@@ -30,21 +30,30 @@ export default function ActivityAnalyzer() {
   const [error, setError] = useState("");
   const [shouldAnalyze, setShouldAnalyze] = useState(true);
 
+  //Workout Summary Offcanvas
+  const [show, setShow] = useState(true);
+  const handleClose = () => setShow(false)
+
   const getActivityData = () => {
+    const user = localStorage.getItem('user');
+    const parsedUser = JSON.parse(user);
+    const userId = parsedUser.idUsers;
+    // console.log("Get User ID from localStorage:", parsedUser.idUsers);
     const baseData = {
-      type: activityType,
-      "perceived intensity": intensity
+      userid: userId,
+      activityType: activityType,
+      intensity: Number(intensity)
     };
 
     switch (activityType) {
       case "Running":
         return {
           ...baseData,
-          distance: runDistance,
+          distance: Number(runDistance),
           duration: runDuration,
           pace: runPace,
-          cadence: runCadence,
-          elevation: runElevation
+          cadence: Number(runCadence),
+          elevation: Number(runElevation)
         };
       case "Biking":
         return {
@@ -64,6 +73,7 @@ export default function ActivityAnalyzer() {
           distance: swimDistance
         };
       default:
+        print(baseData)
         return baseData;
     }
   };
@@ -203,7 +213,8 @@ export default function ActivityAnalyzer() {
         <div>
           <WorkoutSummary
           aiResponse={response}
-          userData={getActivityData()} />
+          userData={getActivityData()}
+         />
         </div>
       
       )}
