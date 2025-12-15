@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WorkoutSummary from "./WorkoutSummary";
 
 export default function ActivityAnalyzer() {
@@ -33,6 +33,74 @@ export default function ActivityAnalyzer() {
   //Workout Summary Offcanvas
   const [show, setShow] = useState(true);
   const handleClose = () => setShow(false)
+
+  // Helpers to calculate and format pace/speed
+  const parseTimeToMinutes = (input) => {
+    if (input === null || input === undefined) return NaN;
+    const s = String(input).trim();
+    if (s === "") return NaN;
+    // If it's a plain number (minutes), accept it
+    if (!s.includes(':')) {
+      const n = parseFloat(s);
+      return isFinite(n) ? n : NaN;
+    }
+
+    const parts = s.split(':').map(p => p.trim());
+    // support mm:ss or h:mm:ss
+    if (parts.length === 2) {
+      const mins = parseInt(parts[0], 10);
+      const secs = parseFloat(parts[1]);
+      if (!isFinite(mins) || !isFinite(secs)) return NaN;
+      return (mins * 60 + secs) / 60;
+    }
+    if (parts.length === 3) {
+      const hrs = parseInt(parts[0], 10);
+      const mins = parseInt(parts[1], 10);
+      const secs = parseFloat(parts[2]);
+      if (!isFinite(hrs) || !isFinite(mins) || !isFinite(secs)) return NaN;
+      return (hrs * 3600 + mins * 60 + secs) / 60;
+    }
+    return NaN;
+  };
+
+  const formatMinSec = (minutesPerUnit) => {
+    if (!isFinite(minutesPerUnit) || minutesPerUnit <= 0) return "";
+    const totalSeconds = Math.round(minutesPerUnit * 60);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Auto-calc running pace (min/mile) when distance or duration change
+  useEffect(() => {
+    const d = parseFloat(runDistance);
+    const t = parseTimeToMinutes(runDuration);
+    if (d > 0 && t > 0) {
+      const paceMinPerMile = t / d; // duration is in minutes
+      setRunPace(formatMinSec(paceMinPerMile));
+    }
+  }, [runDistance, runDuration]);
+
+  // Auto-calc biking speed (mph) when distance or duration change
+  useEffect(() => {
+    const d = parseFloat(bikeDistance);
+    const t = parseTimeToMinutes(bikeDuration);
+    if (d > 0 && t > 0) {
+      const hours = t / 60;
+      const mph = d / hours;
+      setBikeSpeed(isFinite(mph) ? mph.toFixed(2) : "");
+    }
+  }, [bikeDistance, bikeDuration]);
+
+  // Auto-calc swim pace (min/100yds) when time or distance change
+  useEffect(() => {
+    const d = parseFloat(swimDistance);
+    const t = parseTimeToMinutes(swimTime);
+    if (d > 0 && t > 0) {
+      const pacePer100 = (t * 100) / d; // minutes per 100yds
+      setSwimPace(formatMinSec(pacePer100));
+    }
+  }, [swimDistance, swimTime]);
 
   const getActivityData = () => {
     const user = localStorage.getItem('user');
@@ -74,10 +142,10 @@ export default function ActivityAnalyzer() {
       case "Swimming":
         return {
           ...baseData,
-          time: swimTime,
-          stroke: swimStroke,
+          distance: Number(swimDistance),
+          duration: swimTime,
           pace: swimPace,
-          distance: swimDistance
+          stroke: swimStroke
         };
       default:
         print(baseData)
@@ -163,7 +231,7 @@ export default function ActivityAnalyzer() {
         return (
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', margin: '10px 0' }}>
             <input className="mx-2" placeholder="Distance (miles) *" value={runDistance} onChange={(e) => setRunDistance(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Duration (minutes) *" value={runDuration} onChange={(e) => setRunDuration(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Duration (mm:ss or h:mm:ss) *" value={runDuration} onChange={(e) => setRunDuration(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="Pace (min/mile) *" value={runPace} onChange={(e) => setRunPace(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="Cadence (steps/min)" value={runCadence} onChange={(e) => setRunCadence(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="Elevation Gain (feet)" value={runElevation} onChange={(e) => setRunElevation(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
@@ -174,7 +242,7 @@ export default function ActivityAnalyzer() {
         return (
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', margin: '10px 0' }}>
             <input className="mx-2" placeholder="Distance (miles) *" value={bikeDistance} onChange={(e) => setBikeDistance(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Duration (minutes) *" value={bikeDuration} onChange={(e) => setBikeDuration(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Duration (mm:ss or h:mm:ss) *" value={bikeDuration} onChange={(e) => setBikeDuration(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="Speed (mph) *" value={bikeSpeed} onChange={(e) => setBikeSpeed(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="RPM" value={bikeRPM} onChange={(e) => setBikeRPM(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="Elevation Gain (feet)" value={bikeElevation} onChange={(e) => setBikeElevation(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
@@ -184,9 +252,9 @@ export default function ActivityAnalyzer() {
       case "Swimming":
         return (
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', margin: '10px 0' }}>
-            <input className="mx-2" placeholder="Time (minutes) *" value={swimTime} onChange={(e) => setSwimTime(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Distance (meters) *" value={swimDistance} onChange={(e) => setSwimDistance(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Pace (min/100m) *" value={swimPace} onChange={(e) => setSwimPace(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Time (mm:ss or h:mm:ss) *" value={swimTime} onChange={(e) => setSwimTime(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Distance (yards) *" value={swimDistance} onChange={(e) => setSwimDistance(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Pace (min/100yds) *" value={swimPace} onChange={(e) => setSwimPace(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="Stroke Type *" value={swimStroke} onChange={(e) => setSwimStroke(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
             <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
           </div>
