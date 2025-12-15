@@ -8,7 +8,7 @@ import activitiesRoutes from "./routes/activities.js";
 import goalsRoutes from "./routes/goals.js";
 import recordsRoutes from "./routes/records.js";
 import healthRoutes from "./routes/health.js";
-// import chatbotRoute from "./routes/chatbot.js";
+import chatbotRoute from "./routes/chatbot.js";
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ app.use(cors());
 // routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
-// app.use("/api/chatbot", chatbotRoute);
+app.use("/api/chatbot", chatbotRoute);
 app.use("/api/activities", activitiesRoutes);
 app.use("/api/goals", goalsRoutes);
 app.use("/api/records", recordsRoutes);

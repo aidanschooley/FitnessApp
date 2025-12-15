@@ -36,8 +36,15 @@ export default function ActivityAnalyzer() {
 
   const getActivityData = () => {
     const user = localStorage.getItem('user');
-    const parsedUser = JSON.parse(user);
-    const userId = parsedUser.idUsers;
+    if (!user) throw new Error('User not logged in');
+    let parsedUser;
+    try {
+      parsedUser = JSON.parse(user);
+    } catch (e) {
+      throw new Error('Invalid user data in localStorage; please log in again');
+    }
+    const userId = parsedUser && parsedUser.idUsers;
+    if (!userId) throw new Error('User ID missing; please log in');
     // console.log("Get User ID from localStorage:", parsedUser.idUsers);
     const baseData = {
       userid: userId,
@@ -105,7 +112,16 @@ export default function ActivityAnalyzer() {
           throw new Error(errorData.error || `Request failed (${res.status})`);
         }
 
-        const data = await res.json();
+        const text = await res.text();
+        console.log("Raw response:", text);
+
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          throw new Error("Server did not return valid JSON");
+        }
+
         setResponse(data.response);
       } else {
         setResponse("Activity created successfully!");

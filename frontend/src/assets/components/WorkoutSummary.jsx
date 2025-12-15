@@ -11,32 +11,41 @@ function WorkoutSummary({ aiResponse, userData }) {
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
   
-  const submitWorkout = () => {
+  const submitWorkout = async () => {
     console.log("Submitting workout:", JSON.stringify(userData));
-    
-     fetch('http://localhost:5000/api/activities/upload', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-            console.log(data);
-                if (data.message === '"Activity uploaded successfully"') {
-                  alert("Workout submitted!");
-                  navigate("/", { replace: true });
-                } else if (data.message === 'Missing Required Fields') {
-                    alert('Missing Required Fields. Please check your input.');
-                } else {
-                    alert('Failed to upload activity. Please try again.');
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
+    try {
+      const response = await fetch('http://localhost:5000/api/activities/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const text = await response.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (err) {
+        console.warn('Received non-JSON response:', text);
+        data = { raw: text };
+      }
+
+      console.log('Upload response:', response.status, data);
+
+      const successMsg = 'Activity uploaded successfully';
+      if (response.ok && (data.message === successMsg || (data.raw && data.raw.includes(successMsg)))) {
+        alert('Workout submitted!');
+        navigate('/', { replace: true });
+      } else if (data.error === 'Missing required fields' || data.message === 'Missing Required Fields' || (data.raw && data.raw.includes('Missing'))) {
+        alert('Missing Required Fields. Please check your input.');
+      } else {
+        alert('Failed to upload activity. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting workout:', error);
+      alert('An error occurred. Please try again.');
+    }
   };
   return (
     <>

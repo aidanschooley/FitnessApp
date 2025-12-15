@@ -43,22 +43,27 @@ export const loginUser = async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
-        // Compare passwords
-        const isMatch = await bcrypt.compare(password, user.Password);
+        // Compare passwords (support multiple possible DB column names)
+        const hashedPassword = user.password ?? user.Password ?? user.PasswordHash ?? user.Passwordhash;
+        const isMatch = await bcrypt.compare(password, hashedPassword);
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
-        // const token = jwt.sign({ id: user.ID, email: user.Email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        const token = jwt.sign({ id: user.idUsers ?? user.ID ?? user.id }, process.env.JWT_SECRET || 'devsecret', { expiresIn: "1h" });
+
+        const userForClient = {
+            idUsers: user.idUsers ?? user.ID ?? user.id,
+            username: user.username ?? user.Username ?? user.userName ?? user.name,
+            email: user.email ?? user.Email
+        };
 
         return res.json({
             message: "Login successful",
-            // token,
-            // user: {
-            //     id: user.id,
-            //     username: user.username,
-            //     email: user.email
-            // }
-        });    } catch (error) {
+            token,
+            user: userForClient
+        });
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Login failed" });
     }

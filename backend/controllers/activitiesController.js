@@ -3,6 +3,8 @@ import { checkIfNewRecord } from "./recordsController.js";
 import { checkIfGoalCompleted } from "./goalsController.js";
 
 export const uploadActivity = async (req, res) => {
+    console.log('uploadActivity called. Content-Type:', req.headers['content-type']);
+    console.log('uploadActivity body:', req.body);
     const {
     userid,
     distance,
@@ -80,7 +82,8 @@ export const uploadActivity = async (req, res) => {
         console.error(error);
         return res.status(500).json({ error: "Failed to upload activity" });
     }
-    res.status(200).json({ message: "Activity uploaded successfully" });
+    console.log('uploadActivity: sending success response');
+    return res.status(200).json({ message: "Activity uploaded successfully" });
 }
 
 export const getActivitySummary = async (req, res) => {
@@ -102,7 +105,7 @@ export const getActivitySummary = async (req, res) => {
         console.error(error);
         return res.status(500).json({ error: "Failed to retrieve activity summary" });
     }
-    res.status(200).json({ message: "Activity summary retrieved successfully" });
+    // response already sent above
 }
 
 export const getActivityById = async (req, res) => {
