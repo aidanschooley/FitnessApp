@@ -7,18 +7,19 @@ export const uploadActivity = async (req, res) => {
     console.log('uploadActivity body:', req.body);
     const {
     userid,
+    activityType,
+    intensity = null,
     distance,
     duration,
+    pace = null,
+    cadence = null,
     ispublic = true,
     notes = null,
-    pace = null,
-    elevationGained = null,
-    cadence = null,
-    intensity = null,
+    elevation = null,
     picture = null,
     rpm = null,
     stroke = null,
-    activityType
+    
     } = req.body;
 
     if (!userid || !distance || !duration || !activityType) {
@@ -36,7 +37,7 @@ export const uploadActivity = async (req, res) => {
                 ispublic,
                 notes,
                 pace,
-                elevationGained,
+                elevation,
                 cadence,
                 intensity,
                 picture,
