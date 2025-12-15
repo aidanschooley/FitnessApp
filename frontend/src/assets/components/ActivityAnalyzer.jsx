@@ -34,6 +34,9 @@ export default function ActivityAnalyzer() {
   const [show, setShow] = useState(true);
   const handleClose = () => setShow(false)
 
+  // Notes
+  const [notes, setNotes] = useState("");
+
   // Helpers to calculate and format pace/speed
   const parseTimeToMinutes = (input) => {
     if (input === null || input === undefined) return NaN;
@@ -113,11 +116,11 @@ export default function ActivityAnalyzer() {
     }
     const userId = parsedUser && parsedUser.idUsers;
     if (!userId) throw new Error('User ID missing; please log in');
-    // console.log("Get User ID from localStorage:", parsedUser.idUsers);
     const baseData = {
       userid: userId,
       activityType: activityType,
-      intensity: Number(intensity)
+      intensity: Number(intensity),
+      notes: notes || null
     };
 
     switch (activityType) {
@@ -169,10 +172,13 @@ export default function ActivityAnalyzer() {
       const userData = getActivityData();
 
       if (shouldAnalyze) {
+        const aiUserData = { ...userData };
+        // Do not send notes to the AI
+        delete aiUserData.notes;
         const res = await fetch("http://localhost:5000/api/chatbot/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityType, userData })
+          body: JSON.stringify({ activityType, userData: aiUserData })
         });
 
         if (!res.ok) {
@@ -277,6 +283,15 @@ export default function ActivityAnalyzer() {
       <p style={{ fontStyle: 'italic' }}>* indicates required fields</p>
 
       {renderActivityInputs()}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
+        <textarea
+          placeholder="Notes (optional)"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          rows={4}
+          style={{ width: '80%', minWidth: '220px', padding: '8px' }}
+        />
+      </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh', gap: '10px' }}>
         <label>
           <input 
