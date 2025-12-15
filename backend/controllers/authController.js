@@ -49,7 +49,7 @@ export const loginUser = async (req, res) => {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        const token = jwt.sign({ id: user.idUsers ?? user.ID ?? user.id }, process.env.JWT_SECRET || 'devsecret', { expiresIn: "1h" });
+        
 
         const userForClient = {
             idUsers: user.idUsers ?? user.ID ?? user.id,
@@ -59,7 +59,6 @@ export const loginUser = async (req, res) => {
 
         return res.json({
             message: "Login successful",
-            token,
             user: userForClient
         });
     } catch (error) {
