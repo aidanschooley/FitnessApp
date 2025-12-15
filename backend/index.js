@@ -9,7 +9,6 @@ import goalsRoutes from "./routes/goals.js";
 import recordsRoutes from "./routes/records.js";
 import chatbotRoute from "./routes/chatbot.js";
 import healthRoutes from "./routes/health.js";
-import chatbotRoute from "./routes/chatbot.js";
 
 dotenv.config();
 

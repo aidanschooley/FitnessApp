@@ -2,8 +2,7 @@
 import SideMenu from "../components/sideMenu.jsx";
 import Login from "./Login.jsx";
 import DashCard from "../components/Dashcard.jsx";
-import FeedPost from "../components/feedpost.jsx";
-import ActivityAnalyzer from "../components/ActivityAnalyzer.jsx";
+import Feed from "../components/feed.jsx";
 
 function Dashboard() {
    const user = localStorage.getItem('user'); // Retrieve user data from local strorage
@@ -40,9 +39,8 @@ function Dashboard() {
             </div>
           </div>
           <h1>Feed</h1>
-          <FeedPost />
-          <FeedPost />
-          <FeedPost />
+          <Feed />
+          
           </>  
       } else{
           return <>
