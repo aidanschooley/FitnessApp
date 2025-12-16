@@ -63,8 +63,16 @@ function FeedPost(props) {
     }
 
     function LastUpdated({ dateString }) {
-        const minutesAgo = Math.floor((Date.now() - new Date(dateString)) / 60000);
-        return <span>Created {minutesAgo} min ago</span>;
+        const createdDate = new Date(dateString);
+        const now = new Date();
+
+        // difference in milliseconds
+        const diffMs = now - createdDate;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return "Today";
+        if (diffDays === 1) return "1 day ago";
+        return `${diffDays} days ago`;
     }
 
     return (
