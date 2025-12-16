@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-export default function CreateGoal() {
+export default function CreateGoal({ onCreated }) {
   const [show, setShow] = useState(false);
   const [activityType, setActivityType] = useState('Running');
   const [goalType, setGoalType] = useState('distance');
@@ -53,6 +53,7 @@ export default function CreateGoal() {
         setDeadline('');
         setGoalType('distance');
         setActivityType('Running');
+        if (typeof onCreated === 'function') onCreated();
       } else {
         console.error('Create goal failed', data);
         alert(data.error || data.message || 'Failed to create goal');

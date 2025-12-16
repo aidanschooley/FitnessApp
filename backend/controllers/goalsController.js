@@ -28,11 +28,23 @@ export const createGoal = async (req, res) => {
 
 export const getGoals = async (req, res) => {
     const { userId } = req.params;
+    const { active } = req.query;
     try {
-        const [rows] = await db.execute(
-            "SELECT idGoals, distance, duration, pace, dateCreated, dateCompleted, deadlineDate, stroke FROM goals WHERE Users_idUsers = ?",
-            [userId]
-        );
+        let rows;
+        if (active === 'true') {
+            // return only active goals: not completed and not past their deadline (or no deadline)
+            const [r] = await db.execute(
+                "SELECT idGoals, distance, duration, pace, dateCreated, dateCompleted, deadlineDate, stroke, activityType FROM goals WHERE Users_idUsers = ? AND dateCompleted IS NULL AND (deadlineDate IS NULL OR deadlineDate >= CURDATE())",
+                [userId]
+            );
+            rows = r;
+        } else {
+            const [r] = await db.execute(
+                "SELECT idGoals, distance, duration, pace, dateCreated, dateCompleted, deadlineDate, stroke, activityType FROM goals WHERE Users_idUsers = ?",
+                [userId]
+            );
+            rows = r;
+        }
         res.json(rows);
     } catch (error) {
         console.error(error);

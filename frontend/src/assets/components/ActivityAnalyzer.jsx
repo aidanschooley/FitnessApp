@@ -175,10 +175,24 @@ export default function ActivityAnalyzer() {
         const aiUserData = { ...userData };
         // Do not send notes to the AI
         delete aiUserData.notes;
+
+        // Fetch active goals for the user and include them in the AI input
+        let goals = [];
+        try {
+          const gRes = await fetch(`http://localhost:5000/api/goals/${userData.userid}?active=true`);
+          if (gRes.ok) {
+            goals = await gRes.json();
+          } else {
+            console.warn('Failed to fetch goals for AI context');
+          }
+        } catch (e) {
+          console.warn('Error fetching goals for AI context', e);
+        }
+
         const res = await fetch("http://localhost:5000/api/chatbot/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ activityType, userData: aiUserData })
+          body: JSON.stringify({ activityType, userData: aiUserData, goals })
         });
 
         if (!res.ok) {
@@ -236,33 +250,33 @@ export default function ActivityAnalyzer() {
       case "Running":
         return (
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', margin: '10px 0' }}>
-            <input className="mx-2" placeholder="Distance (miles) *" value={runDistance} onChange={(e) => setRunDistance(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Duration (mm:ss or h:mm:ss) *" value={runDuration} onChange={(e) => setRunDuration(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Pace (min/mile) *" value={runPace} onChange={(e) => setRunPace(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Cadence (steps/min)" value={runCadence} onChange={(e) => setRunCadence(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Elevation Gain (feet)" value={runElevation} onChange={(e) => setRunElevation(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Distance (miles) *" value={runDistance} onChange={(e) => setRunDistance(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Duration (mm:ss or h:mm:ss) *" value={runDuration} onChange={(e) => setRunDuration(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Pace (min/mile) *" value={runPace} onChange={(e) => setRunPace(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Cadence (steps/min)" value={runCadence} onChange={(e) => setRunCadence(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Elevation Gain (feet)" value={runElevation} onChange={(e) => setRunElevation(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
           </div>
         );
       case "Biking":
         return (
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', margin: '10px 0' }}>
-            <input className="mx-2" placeholder="Distance (miles) *" value={bikeDistance} onChange={(e) => setBikeDistance(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Duration (mm:ss or h:mm:ss) *" value={bikeDuration} onChange={(e) => setBikeDuration(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Speed (mph) *" value={bikeSpeed} onChange={(e) => setBikeSpeed(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="RPM" value={bikeRPM} onChange={(e) => setBikeRPM(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Elevation Gain (feet)" value={bikeElevation} onChange={(e) => setBikeElevation(e.target.value)} style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Distance (miles) *" value={bikeDistance} onChange={(e) => setBikeDistance(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Duration (mm:ss or h:mm:ss) *" value={bikeDuration} onChange={(e) => setBikeDuration(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Speed (mph) *" value={bikeSpeed} onChange={(e) => setBikeSpeed(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="RPM" value={bikeRPM} onChange={(e) => setBikeRPM(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Elevation Gain (feet)" value={bikeElevation} onChange={(e) => setBikeElevation(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
           </div>
         );
       case "Swimming":
         return (
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', margin: '10px 0' }}>
             <input className="mx-2" placeholder="Time (mm:ss or h:mm:ss) *" value={swimTime} onChange={(e) => setSwimTime(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Distance (yards) *" value={swimDistance} onChange={(e) => setSwimDistance(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Pace (min/100yds) *" value={swimPace} onChange={(e) => setSwimPace(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Stroke Type *" value={swimStroke} onChange={(e) => setSwimStroke(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
-            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '140px' }} />
+            <input className="mx-2" placeholder="Distance (yards) *" value={swimDistance} onChange={(e) => setSwimDistance(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Pace (min/100yds) *" value={swimPace} onChange={(e) => setSwimPace(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Stroke Type *" value={swimStroke} onChange={(e) => setSwimStroke(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
           </div>
         );
       default:
