@@ -56,8 +56,12 @@ function Goals() {
                 {goals.map(g => (
                     <div key={g.idGoals} style={{ border: '1px solid #ddd', padding: '12px', borderRadius: '6px' }}>
                         <strong>{g.activityType || 'Activity'}</strong>
-                        <div>Distance: {g.distance ?? '—'}</div>
-                        <div>Duration: {g.duration ?? '—'}</div>
+                        {g.distance ? (
+                            <div>Distance: {g.distance}</div>
+                        ) : null}
+                        {g.duration ? (
+                            <div>Duration: {g.duration}</div>
+                        ) : null}
                         <div>Deadline: {g.deadlineDate ? new Date(g.deadlineDate).toLocaleDateString() : 'No deadline'}</div>
                         <div>Created: {g.dateCreated ? new Date(g.dateCreated).toLocaleDateString() : '—'}</div>
                     </div>

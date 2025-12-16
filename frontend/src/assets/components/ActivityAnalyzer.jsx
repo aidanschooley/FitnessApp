@@ -255,7 +255,7 @@ export default function ActivityAnalyzer() {
             <input className="mx-2" placeholder="Pace (min/mile) *" value={runPace} onChange={(e) => setRunPace(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
             <input className="mx-2" placeholder="Cadence (steps/min)" value={runCadence} onChange={(e) => setRunCadence(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
             <input className="mx-2" placeholder="Elevation Gain (feet)" value={runElevation} onChange={(e) => setRunElevation(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
-            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px', maxWidth: '221px' }} />
           </div>
         );
       case "Biking":
@@ -266,7 +266,7 @@ export default function ActivityAnalyzer() {
             <input className="mx-2" placeholder="Speed (mph) *" value={bikeSpeed} onChange={(e) => setBikeSpeed(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
             <input className="mx-2" placeholder="RPM" value={bikeRPM} onChange={(e) => setBikeRPM(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
             <input className="mx-2" placeholder="Elevation Gain (feet)" value={bikeElevation} onChange={(e) => setBikeElevation(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
-            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
+            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px', maxWidth: '225px' }} />
           </div>
         );
       case "Swimming":
@@ -309,6 +309,7 @@ export default function ActivityAnalyzer() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh', gap: '10px' }}>
         <label>
           <input 
+            style={{ marginRight: "5px" }}
             type="checkbox" 
             checked={shouldAnalyze} 
             onChange={(e) => setShouldAnalyze(e.target.checked)} 
