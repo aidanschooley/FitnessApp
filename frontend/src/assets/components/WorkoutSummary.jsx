@@ -49,7 +49,7 @@ function WorkoutSummary({ aiResponse, userData }) {
   };
   return (
     <>
-      <Offcanvas style={{ height: '55vh' }} show={show} onHide={handleClose} placement="bottom">
+      <Offcanvas style={{ height: '65vh' }} show={show} onHide={handleClose} placement="bottom">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Workout Summary</Offcanvas.Title>
         </Offcanvas.Header>

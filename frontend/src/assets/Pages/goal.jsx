@@ -83,7 +83,7 @@ function Goals() {
                         <button
                             onClick={() => setOpenMenuId(openMenuId === g.idGoals ? null : g.idGoals)}
                             aria-label="more"
-                            style={{ position: 'absolute', right: '8px', top: '8px', border: 'none', background: 'transparent', cursor: 'pointer' }}
+                            style={{ position: 'absolute', right: '8px', top: '8px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#555', fontSize: '20px' }}
                         >
                             ⋮
                         </button>
@@ -114,21 +114,28 @@ function Goals() {
                                             setCompletingId(null);
                                         }
                                     }}
-                                    style={{ display: 'block', padding: '8px 12px', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                                    style={{ display: 'block', padding: '8px 12px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#007bff', width: '100%', textAlign: 'left' }}
                                 >
                                     {completingId === g.idGoals ? 'Completing...' : 'Mark Completed'}
                                 </button>
                             </div>
                         )}
 
-                        {g.distance ? (
-                            <div>Distance: {g.distance}</div>
-                        ) : null}
-                        {g.duration ? (
-                            <div>Duration: {g.duration}</div>
-                        ) : null}
-                        <div>Deadline: {g.deadlineDate ? new Date(g.deadlineDate).toLocaleDateString() : 'No deadline'}</div>
-                        <div>Created: {g.dateCreated ? new Date(g.dateCreated).toLocaleDateString() : '—'}</div>
+                        {showCompleted ? (
+                            <>
+                                {g.distance ? <div>Goal (distance): {g.distance} {g.activityType === 'Swimming' ? 'yards' : 'miles'}</div> : null}
+                                {g.duration ? <div>Goal (duration): {g.duration}{typeof g.duration === 'string' && g.duration.includes(':') ? '' : ' minutes'}</div> : null}
+                                <div>Created: {g.dateCreated ? new Date(g.dateCreated).toLocaleDateString() : '—'}</div>
+                                <div>Completed: {g.dateCompleted ? new Date(g.dateCompleted).toLocaleDateString() : '—'}</div>
+                            </>
+                        ) : (
+                            <>
+                                {g.distance ? <div>Distance: {g.distance} {g.activityType === 'Swimming' ? 'yards' : 'miles'}</div> : null}
+                                {g.duration ? <div>Duration: {g.duration}{typeof g.duration === 'string' && g.duration.includes(':') ? '' : ' minutes'}</div> : null}
+                                <div>Deadline: {g.deadlineDate ? new Date(g.deadlineDate).toLocaleDateString() : 'No deadline'}</div>
+                                <div>Created: {g.dateCreated ? new Date(g.dateCreated).toLocaleDateString() : '—'}</div>
+                            </>
+                        )}
                     </div>
                 ))}
             </div>

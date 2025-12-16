@@ -1,5 +1,19 @@
 import db from "../db/connection.js";
 
+const formatToMySQLDateTime = (input) => {
+    if (!input) return null;
+    const d = new Date(input);
+    if (isNaN(d.getTime())) return null;
+    const pad = (n) => String(n).padStart(2, '0');
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const mins = pad(d.getMinutes());
+    const secs = pad(d.getSeconds());
+    return `${year}-${month}-${day} ${hours}:${mins}:${secs}`;
+};
+
 export const createGoal = async (req, res) => {
     const { userId, 
         distance = null, 
@@ -75,21 +89,35 @@ export const deleteGoal = async (req, res) => {
 
 export const updateGoal = async (req, res) => {
     const { goalId } = req.params;
-    const { distance = null,
-        duration = null,
-        pace = null,
-        dateCompleted = null, 
-        deadlineDate = null, 
-        stroke = null,
-        activityType = null
-    } = req.body;
+    const { distance, duration, pace, dateCompleted, deadlineDate, stroke, activityType } = req.body;
     
     try {
         // console.log("Updating goal:", distance, duration, pace, stroke, goalId)
-        await db.execute(
-            "UPDATE goals SET distance = ?, duration = ?, pace = ?, dateCompleted = ?, deadlineDate = ?, stroke = ?, activityType = ? WHERE idGoals = ?",
-            [distance, duration, pace, dateCompleted, deadlineDate, stroke, activityType, goalId]
-        );
+        // Build dynamic update so we don't overwrite fields with null when not provided
+        const allowedFields = [
+            'distance', 'duration', 'pace', 'dateCompleted', 'deadlineDate', 'stroke', 'activityType'
+        ];
+        const updates = [];
+        const params = [];
+
+        for (const field of allowedFields) {
+            if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+                let val = req.body[field];
+                if (field === 'dateCompleted' || field === 'deadlineDate') {
+                    val = formatToMySQLDateTime(val);
+                }
+                updates.push(`${field} = ?`);
+                params.push(val);
+            }
+        }
+
+        if (updates.length === 0) {
+            return res.status(400).json({ error: 'No fields provided to update' });
+        }
+
+        params.push(goalId);
+        const sql = `UPDATE goals SET ${updates.join(', ')} WHERE idGoals = ?`;
+        await db.execute(sql, params);
         res.json({ message: "Goal updated successfully" });
     } catch (error) {
         console.error(error);
