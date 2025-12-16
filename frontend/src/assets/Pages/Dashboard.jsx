@@ -20,10 +20,10 @@ function Dashboard() {
                 <div className="container">
                   <div className="row">
                    <DashCard
-                    content={{title:"Water Intake", content:"Track your daily water consumption here.", defaultValue:"0 oz"}}
+                    content={{title:"Water Intake", content:"Track your daily water consumption here.", defaultValue:"0 oz", healthdata:"water"}}
                     />
                     <DashCard
-                    content={{title:"Calories Consumed", content:"Monitor your daily calorie intake.", defaultValue:"0 kcal"}}
+                    content={{title:"Calories Consumed", content:"Monitor your daily calorie intake.", defaultValue:"0 kcal", healthdata:"calories"}}
                     />
                   </div>
                   <div className="row">
@@ -31,8 +31,7 @@ function Dashboard() {
                     content = {{title:"Distance", content:"Log the distance you've covered today.", defaultValue:"0 miles"}}
                     />
                     <DashCard
-                    content={{title: "Current Weight", content:"Keep an eye on your weight progress.", defaultValue:"0 lbs"
-                    }}
+                    content={{title: "Current Weight", content:"Keep an eye on your weight progress.", defaultValue:"0 lbs", healthdata:"weight"}}
                     />
                   </div>  
               </div>
