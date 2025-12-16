@@ -94,10 +94,11 @@ export const getActivitySummary = async (req, res) => {
     }
     try {
         const [rows] = await db.execute(
-            `SELECT activityType, notes, pace, elevationGained, cadence, distance, duration, intensity, dateCreated
+            `SELECT activityType, distance, duration, intensity, dateCreated, pace, elevationGained, cadence, notes, picture, rpm, stroke
             FROM activity
             WHERE Users_idUsers = ?
-            ORDER BY dateCreated DESC`,
+            ORDER BY dateCreated DESC
+            LIMIT 10`,
             [userid]
         );
         res.status(200).json({ activities: rows });

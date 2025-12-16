@@ -66,7 +66,8 @@ function Feed() {
                     elevationGained={activity.elevationGained ?? 0}
                     cadence={activity.cadence ?? 0}
                     notes={activity.notes ?? ""}
-
+                    stroke= {activity.stroke ?? ""}
+                    rpm= {activity.rpm ?? 0}
                 />
             ))}
             </div>
