@@ -8,8 +8,13 @@ function Feed() {
     function fetchFeedPosts() {
         
         const user = JSON.parse(localStorage.getItem('user'));
-        const userId = user.idUsers;
-        fetch(`http://localhost:5000/api/activities/summary?userId=${userId}`, {
+        if (!user || !user.idUsers) {
+            setError(true);
+            setLoading(false);
+            return;
+        }
+        const userid = user.idUsers;
+        fetch(`http://localhost:5000/api/activities/summary?userid=${userid}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -26,8 +31,9 @@ function Feed() {
                     .then((data) => {
                         console.log(`Activity Data: ${JSON.stringify(data)}`);
                         setError(false);
-                        setActivities([data]);
+                        setActivities(data.activities);
                         setLoading(false);
+
                     })
                     .catch((error) => {
                         console.error('Error:', error);
@@ -46,10 +52,20 @@ function Feed() {
     if (activities.length === 0) return <p>No activities yet.</p>;
     return (
         <div>
-            
-            {activities.map((activity, index) => (
-                <FeedPost key={index} distance={activity.distance} duration={activity.duration} pace={activity.pace} elevationGained={activity.elevationGained} cadence={activity.cadence} intensity={activity.intensity} picture={activity.picture} rpm={activity.rpm} stroke={activity.stroke} activityType={activity.activityType} notes={activity.notes} time={activity.time} />
+            <div>
+                {activities.map((activity, index) => (
+                <FeedPost
+                    key={`${activity.dateCreated}-${index}`}
+                    activityType={activity.activityType ?? "Unknown"}
+                    distance={activity.distance ?? 0}
+                    duration={activity.duration ?? "N/A"}
+                    intensity={activity.intensity ?? "N/A"}
+                    time={activity.dateCreated ?? ""}
+                    dateCreated={activity.dateCreated ?? ""}
+
+                />
             ))}
+            </div>
         </div>
     );
 }
