@@ -62,6 +62,10 @@ function Feed() {
                     intensity={activity.intensity ?? "N/A"}
                     time={activity.dateCreated ?? ""}
                     dateCreated={activity.dateCreated ?? ""}
+                    pace={activity.pace ?? 0}
+                    elevationGained={activity.elevationGained ?? 0}
+                    cadence={activity.cadence ?? 0}
+                    notes={activity.notes ?? ""}
 
                 />
             ))}
