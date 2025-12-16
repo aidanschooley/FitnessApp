@@ -38,6 +38,13 @@ export const getGoals = async (req, res) => {
                 [userId]
             );
             rows = r;
+        } else if (req.query.completed === 'true') {
+            // return only completed goals
+            const [r] = await db.execute(
+                "SELECT idGoals, distance, duration, pace, dateCreated, dateCompleted, deadlineDate, stroke, activityType FROM goals WHERE Users_idUsers = ? AND dateCompleted IS NOT NULL",
+                [userId]
+            );
+            rows = r;
         } else {
             const [r] = await db.execute(
                 "SELECT idGoals, distance, duration, pace, dateCreated, dateCompleted, deadlineDate, stroke, activityType FROM goals WHERE Users_idUsers = ?",

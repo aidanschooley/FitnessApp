@@ -70,7 +70,7 @@ export default function CreateGoal({ onCreated }) {
         Create Goal
       </Button>
 
-      <Offcanvas show={show} onHide={handleClose} placement="bottom" style={{ height: '50vh' }}>
+      <Offcanvas show={show} onHide={handleClose} placement="bottom" style={{ height: '60vh' }}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Create Goal</Offcanvas.Title>
         </Offcanvas.Header>
