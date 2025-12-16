@@ -9,11 +9,11 @@ function Feed() {
         
         const user = JSON.parse(localStorage.getItem('user'));
         const userId = user.idUsers;
-        fetch(`http://localhost:5000/api/activities?userid=${user.idUsers}`, {
+        fetch(`http://localhost:5000/api/activities/summary?userId=${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                    }
+                    },
                 })
                     .then((response) => {
                         if (response.ok) {
