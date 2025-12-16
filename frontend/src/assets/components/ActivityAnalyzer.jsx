@@ -266,7 +266,7 @@ export default function ActivityAnalyzer() {
             <input className="mx-2" placeholder="Speed (mph) *" value={bikeSpeed} onChange={(e) => setBikeSpeed(e.target.value)} required style={{ flex: '1', minWidth: '200px' }} />
             <input className="mx-2" placeholder="RPM" value={bikeRPM} onChange={(e) => setBikeRPM(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
             <input className="mx-2" placeholder="Elevation Gain (feet)" value={bikeElevation} onChange={(e) => setBikeElevation(e.target.value)} style={{ flex: '1', minWidth: '200px' }} />
-            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px', maxWidth: '225px' }} />
+            <input className="mx-2" placeholder="Intensity (1-10) *" value={intensity} onChange={(e) => setIntensity(e.target.value)} required style={{ flex: '1', minWidth: '200px', maxWidth: '221px' }} />
           </div>
         );
       case "Swimming":
